@@ -49,7 +49,7 @@ for key in potential_user_category_list.keys():
             potential_user_item[int(key)] = item_set 
 
 writer = csv.writer(open('potential_user_item.csv','wb'))
-for key, value in potential_user_category.items():
+for key, value in potential_user_item.items():
     writer.writerow([key,value])
 # if you want to read this dictionary file
 # reader = csv.reader(open('potential_user_item.csv','rb'))
