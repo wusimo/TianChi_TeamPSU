@@ -1,5 +1,3 @@
-## data cleaning for the potential_user_item_category list
-
 import pandas as pd
 import numpy as np
 import json
@@ -8,14 +6,8 @@ from collections import defaultdict
 # read in data
 data = pd.read_csv("D:/Anaconda/tianchi_mobile_recommend_train_user.csv")
 
-# function for obtain a user's category information with add to chart items and sorted time order
-def user_category_table(user,item_category,data):
-    user_table = data[data.user_id == user]
-    user_table_1 = user_table[user_table.item_category == item_category]
-    #user_table = user_table_1[user_table.behavior_type == 3]
-    user_table_1 = user_table_1.sort('time')
-    return user_table_1
 
+## data cleaning for the potential_user_item_category list
 # read in the predict list of item and category
 predict_item = pd.read_csv("D:/Anaconda/tianchi_mobile_recommend_train_item.csv")
 # read in the potential user category list
@@ -36,7 +28,15 @@ for key in potential_user_category.keys():
     if len(user_category_list):# which means the list is not empty
         potential_user_category_list[key] = user_category_list
 
-# selecting the intersection of need to be predicted items and user add to chart but not purchased items 
+
+def user_category_table(user,item_category,data):
+    user_table = data[data.user_id == user]
+    user_table_1 = user_table[user_table.item_category == item_category]
+    user_table = user_table_1[user_table.behavior_type == 3]
+    user_table_1 = user_table.sort('time')
+    return user_table
+        
+        
 potential_user_item = defaultdict(set)        
 for key in potential_user_category_list.keys():
     for category in potential_user_category_list[key]:
@@ -47,3 +47,10 @@ for key in potential_user_category_list.keys():
         item_set = set(A_table.item_id).intersection(set(B_table.item_id))
         if len(item_set):
             potential_user_item[int(key)] = item_set 
+
+writer = csv.writer(open('potential_user_item.csv','wb'))
+for key, value in potential_user_category.items():
+    writer.writerow([key,value])
+# if you want to read this dictionary file
+# reader = csv.reader(open('potential_user_item.csv','rb'))
+# potential_user_category = dict(x for x in reader)
