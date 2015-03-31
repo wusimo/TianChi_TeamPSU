@@ -31,9 +31,9 @@ for day in day_list:
     
     # judge whether a "buy" action is a crazy one
     for i in range(0, len(deal_day_data)):
-        user_id = deal_day_data.user_id[i]
-        category_id = deal_day_data.item_category[i]
-        item_id = deal_day_data.item_id[i]
+        user_id = deal_day_data.user_id[i] # here is the BUG
+        category_id = deal_day_data.item_category[i] # here is the BUG
+        item_id = deal_day_data.item_id[i] # here is the BUG
         
         # does the user have any other behavior on this item before?
         previous_data = user_data[user_data.user_id == user_id] 
