@@ -28,12 +28,12 @@ def predict_centroid(user_id,data,alpha=6,beta=0.5):
         unbought_table = unbought_table[unbought_table.item_id!=item]
         unbought_table = unbought_table[unbought_table.time<buy_time]
         for i in range(0,len(table)):
-            a = (int(buy_time.replace("-","").replace(" ",""))-int(table.time.values[i].replace("-","").replace(" ","")))**beta
+            a = 600/(int(buy_time.replace("-","").replace(" ",""))-int(table.time.values[i].replace("-","").replace(" ","")))**beta)
             b = int(table.behavior_type.values[i])**alpha
             user_bought_list_x.append(a)
             user_bought_list_y.append(b)
         for j in range(0,len(unbought_table)):
-            a = (int(buy_time.replace("-","").replace(" ",""))-int(unbought_table.time.values[j].replace("-","").replace(" ","")))**beta
+            a = 600/((int(buy_time.replace("-","").replace(" ",""))-int(unbought_table.time.values[j].replace("-","").replace(" ","")))**beta)
             b = int(unbought_table.behavior_type.values[j])**alpha
             user_unbought_list_x.append(a)
             user_unbought_list_y.append(b)
