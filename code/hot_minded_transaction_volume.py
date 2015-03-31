@@ -25,19 +25,16 @@ for day in day_list:
     deal_day_data = day_data[day_data.behavior_type == 4]
     hot_minded_transaction_count = 0
     
-#    user_list = deal_day_data.user_id
-#    category_list = deal_day_data.item_category
-#    item_list = deal_day_data.item_id
+    user_list = list(deal_day_data.user_id)
+    category_list = list(deal_day_data.item_category)
+    item_list = list(deal_day_data.item_id)
     
     # judge whether a "buy" action is a crazy one
     for i in range(0, len(deal_day_data)):
-        user_id = deal_day_data.user_id[i] # here is the BUG
-        category_id = deal_day_data.item_category[i] # here is the BUG
-        item_id = deal_day_data.item_id[i] # here is the BUG
-        
+                
         # does the user have any other behavior on this item before?
-        previous_data = user_data[user_data.user_id == user_id] 
-        previous_data = previous_data[previous_data.item_id == item_id]
+        previous_data = user_data[user_data.user_id == user_list[i]] 
+        previous_data = previous_data[previous_data.item_id == item_list[i]]
         previous_data = previous_data[previous_data.time < day]
         
         if len(previous_data) == 0:
@@ -45,12 +42,12 @@ for day in day_list:
             break
         
         # does the user have less than 10 behaviors on the category before?
-        previous_data = user_data[user_data.user_id == user_id]
-        previous_data = previous_data[previous_data.item_category == category_id]
+        previous_data = user_data[user_data.user_id == user_list[i]]
+        previous_data = previous_data[previous_data.item_category == category_list[i]]
         previous_data = previous_data[previous_data.time < day]
         
         if len(previous_data) <= 10:
             hot_minded_transaction_count = hot_minded_transaction_count + 1
             
-        # output to file
-        file_hot_minded.writerow([day, hot_minded_transaction_count])
+    # output to file
+    file_hot_minded.writerow([day, hot_minded_transaction_count])
