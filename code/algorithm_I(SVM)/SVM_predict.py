@@ -1,11 +1,16 @@
 from sklearn import svm
-data = pd.read_csv("D:/Anaconda/tianchi_mobile_recommend_train_user.csv")
-reader = csv.reader(open('potential_user_item.csv','rb'))
+import pandas as pd
+import csv
+
+#data = pd.read_csv("D:/Anaconda/tianchi_mobile_recommend_train_user.csv")
+reader = csv.reader(open('/Users/Simo/TianChi_TeamPSU/data/potential_user_item.csv','rb'))
 potential_user_item = dict(x for x in reader)
-writer = csv.writer(open('predicting_list_test.csv','wb'))
-for i in range(0,len(potential_user_item.items())):
+writer = csv.writer(open('/Users/Simo/Documents/Tianchi_local/predicting_list_test.csv','wb'))
+
+for i in range(0,7):#len(potential_user_item.items())
     user = int(potential_user_item.items()[i][0])
-    #def SVM_training(user,)
+    #def SVM_training(user,data,alpha,beta)
+    
     user_table = data[data.user_id==user].sort('time')
     bought_table = user_table[user_table.behavior_type==4]
     user_bought = set(bought_table.item_id.values)    
@@ -17,8 +22,11 @@ for i in range(0,len(potential_user_item.items())):
     user_unbuy_list = []
     alpha=6
     beta=0.5
-    for item in user_bought:
-        if len(bought_table):
+    
+    if len(bought_table):
+        
+        for item in user_bought:
+        
             table = user_table[user_table.item_id==item]
             buy_time = min(table[table.behavior_type==4].time)
             table = table[table.time<=buy_time]
@@ -72,11 +80,11 @@ for i in range(0,len(potential_user_item.items())):
                 b = int(table.behavior_type.values[iiii])**alpha
                 list_x.append(a)
                 list_y.append(b)
-                if len(list_x)!=0:
-                    x = [p for p in list_x]
-                    y = [p for p in list_y]
-                    centroid = (sum(x) / len(list_x), sum(y) / len(list_y))
-                    if clf.predict(centroid):
-                        writer.writerow([user,int(item_list[jjj])])
+        if len(list_x)!=0:
+            x = [p for p in list_x]
+            y = [p for p in list_y]
+            centroid = (sum(x) / len(list_x), sum(y) / len(list_y))
+            if clf.predict(centroid):
+                writer.writerow([user,int(item_list[jjj])])
                         
                    
