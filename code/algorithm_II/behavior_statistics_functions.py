@@ -1,6 +1,3 @@
-##it finds some statistics of user behavior
-# results are saved in a table
-
 # total times of different behaviors
 def behaviors_total(usr_data):
     
@@ -25,7 +22,7 @@ def behavior_bought_item_average(usr_data, bought_item_set):
     for itm in bought_item_set:
         itm_data = usr_data[usr_data.item_id == itm]
         itm_bought_data = itm_data[itm_data.behavior_type == 4]
-        first_bought_time = itm_bought_data.time[0]
+        first_bought_time = min(itm_bought_data.time)
         itm_data = itm_data[itm_data.time <= first_bought_time] # user behavior data on bought item before 
                                                                 # the first bought time
         
@@ -56,9 +53,9 @@ def behavior_unbought_item_average(usr_data, unbought_item_set):
         behavior_2_unbought_itm_sum = behavior_2_unbought_itm_sum + len(itm_data[itm_data.behavior_type == 2])
         behavior_3_unbought_itm_sum = behavior_3_unbought_itm_sum + len(itm_data[itm_data.behavior_type == 3])
         
-    behavior_1_unbought_itm_avrg = behavior_1_itm_unbought_sum / len(unbought_item_set)
-    behavior_2_unbought_itm_avrg = behavior_2_itm_unbought_sum / len(unbought_item_set)
-    behavior_3_unbought_itm_avrg = behavior_3_itm_unbought_sum / len(unbought_item_set)
+    behavior_1_unbought_itm_avrg = behavior_1_unbought_itm_sum / len(unbought_item_set)
+    behavior_2_unbought_itm_avrg = behavior_2_unbought_itm_sum / len(unbought_item_set)
+    behavior_3_unbought_itm_avrg = behavior_3_unbought_itm_sum / len(unbought_item_set)
     
     return([behavior_1_unbought_itm_avrg, behavior_2_unbought_itm_avrg, behavior_3_unbought_itm_avrg])
 
@@ -76,7 +73,7 @@ def behavior_bought_category_average(usr_data, bought_category_set):
     for catg in bought_category_set:
         catg_data = usr_data[usr_data.item_category == catg]
         catg_bought_data = catg_data[catg_data.behavior_type == 4]
-        first_bought_time = catg_bought_data.time[0]
+        first_bought_time = min(catg_bought_data.time)
         catg_data = catg_data[catg_data.time <= first_bought_time] # user behavior data on bought category before 
                                                                    # the first bought time
         
@@ -84,9 +81,9 @@ def behavior_bought_category_average(usr_data, bought_category_set):
         behavior_2_bought_catg_sum = behavior_2_bought_catg_sum + len(catg_data[catg_data.behavior_type == 2])
         behavior_3_bought_catg_sum = behavior_3_bought_catg_sum + len(catg_data[catg_data.behavior_type == 3])
         
-    behavior_1_bought_catg_avrg = behavior_1_bought_catg_sum / len(bought_catg_set)
-    behavior_2_bought_catg_avrg = behavior_2_bought_catg_sum / len(bought_catg_set)
-    behavior_3_bought_catg_avrg = behavior_3_bought_catg_sum / len(bought_catg_set)
+    behavior_1_bought_catg_avrg = behavior_1_bought_catg_sum / len(bought_category_set)
+    behavior_2_bought_catg_avrg = behavior_2_bought_catg_sum / len(bought_category_set)
+    behavior_3_bought_catg_avrg = behavior_3_bought_catg_sum / len(bought_category_set)
     
     return([behavior_1_bought_catg_avrg, behavior_2_bought_catg_avrg, behavior_3_bought_catg_avrg])
 
@@ -120,18 +117,19 @@ def behavior_similar_item_average(usr_data, bought_item_set):
     if len(bought_item_set) == 0:
         return([0, 0, 0])
     
-    behavior_1_similar_item_sum = 0
-    behavior_2_similar_item_sum = 0
-    behavior_3_similar_item_sum = 0
+    behavior_1_similar_sum = 0
+    behavior_2_similar_sum = 0
+    behavior_3_similar_sum = 0
     
     for itm in bought_item_set:
         itm_data = usr_data[usr_data.item_id == itm]
-        catg = itm_data.item_category[0]
+        catg = itm_data.item_category.values[0]
         itm_bought_data = itm_data[itm_data.behavior_type == 4]
-        first_bought_time = itm_bought_data.time[0]
+        first_bought_time = min(itm_bought_data.time)
         catg_data = usr_data[usr_data.item_category == catg]
         catg_data = catg_data[catg_data.time <= first_bought_time]
-        similar_itm_set = set(catg_data.item_id).difference(set(itm)) # similar items in the same category
+        similar_itm_set = set(catg_data.item_id) # similar items in the same category
+        similar_itm_set = similar_itm_set.difference(set([itm]))
         
         if len(similar_itm_set) == 0:
             continue
@@ -166,10 +164,11 @@ def cycle_bought_item(usr_data, bought_item_set):
     cycle_bought_itm_sum = 0
     for itm in bought_item_set:
         itm_data = usr_data[usr_data.item_id == itm]
-        begin_behavior_time = itm_data.time[0]
-        itm_bought_data = itm_data[itm_dat.behavior_type == 4]
-        first_bought_time = itm_bought_data.time[0]
-        cycle_bought_itm_sum = cycle_bought_itm_sum + first_bought_time - begin_behavior_time + 1
+        begin_behavior_time = min(itm_data.time)
+        itm_bought_data = itm_data[itm_data.behavior_type == 4]
+        first_bought_time = min(itm_bought_data.time)
+        delta = datetime.strptime(first_bought_time, '%Y-%m-%d') - datetime.strptime(begin_behavior_time, '%Y-%m-%d')
+        cycle_bought_itm_sum = cycle_bought_itm_sum + delta.days + 1
     
     cycle_bought_itm_avrg = cycle_bought_itm_sum / len(bought_item_set)
     
@@ -184,9 +183,10 @@ def cycle_unbought_item(usr_data, unbought_item_set):
     cycle_unbought_itm_sum = 0
     for itm in unbought_item_set:
         itm_data = usr_data[usr_data.item_id == itm]
-        begin_behavior_time = itm_data.time[0]
-        end_behavior_time = itm_data.time[len(itm_data)-1]
-        cycle_unbought_itm_sum = cycle_unbought_itm_sum + end_behavior_time - begin_behavior_time + 1
+        begin_behavior_time = min(itm_data.time)
+        end_behavior_time = max(itm_data.time)
+        delta = datetime.strptime(end_behavior_time, '%Y-%m-%d') - datetime.strptime(begin_behavior_time, '%Y-%m-%d')
+        cycle_unbought_itm_sum = cycle_unbought_itm_sum + delta.days + 1
     
     cycle_unbought_itm_avrg = cycle_unbought_itm_sum / len(unbought_item_set)
     
