@@ -14,4 +14,4 @@ selected_data = data[data['user_id'].isin(selected_user_set)]
 selected_data.to_csv('thousand_selected_data', sep='\t', encoding='utf-8')
 
 # if you want to read this file
-pd.read_csv("thousand_selected_data")
+#pd.read_csv("thousand_selected_data")
