@@ -234,10 +234,10 @@ user_data = user_data[user_data.time <= '2014-12-16']
 # get behavior statistics for each user
 user_set = set(user_data.user_id)
 
-flag = 1
+#flag = 1
 for usr in user_set:
-    print flag
-    flag = flag + 1
+#   print flag
+#   flag = flag + 1
     usr_data = user_data[user_data.user_id == usr] # data of the particular user
     usr_bought_data = usr_data[usr_data.behavior_type == 4] # user bought something
     item_set = set(usr_data.item_id)
