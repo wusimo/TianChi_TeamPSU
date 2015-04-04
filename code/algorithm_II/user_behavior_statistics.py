@@ -37,7 +37,8 @@ def behavior_bought_item_average(usr_data, bought_item_set):
         behavior_2_bought_itm_sum = behavior_2_bought_itm_sum + len(itm_data[itm_data.behavior_type == 2])
         behavior_3_bought_itm_sum = behavior_3_bought_itm_sum + len(itm_data[itm_data.behavior_type == 3])
         
-    behavior_1_bought_itm_avrg = round(behavior_1_bought_itm_sum / len(bought_item_set), 3) # average times of browsing before usr finally decided to buy something
+    behavior_1_bought_itm_avrg = round(behavior_1_bought_itm_sum / len(bought_item_set), 3) # average times of browsing before usr finally
+                                                                                            # decided to buy something
     behavior_2_bought_itm_avrg = round(behavior_2_bought_itm_sum / len(bought_item_set), 3)
     behavior_3_bought_itm_avrg = round(behavior_3_bought_itm_sum / len(bought_item_set), 3)
     
@@ -90,7 +91,8 @@ def behavior_bought_category_average(usr_data, bought_category_set):
         behavior_2_bought_catg_sum = behavior_2_bought_catg_sum + len(catg_data[catg_data.behavior_type == 2])
         behavior_3_bought_catg_sum = behavior_3_bought_catg_sum + len(catg_data[catg_data.behavior_type == 3])
         
-    behavior_1_bought_catg_avrg = round(behavior_1_bought_catg_sum / len(bought_category_set), 3) # average browsing times before usr decided to buy something from TaoBao
+    behavior_1_bought_catg_avrg = round(behavior_1_bought_catg_sum / len(bought_category_set), 3) # average browsing times before usr decided to
+                                                                                                  # buy something from TaoBao
     behavior_2_bought_catg_avrg = round(behavior_2_bought_catg_sum / len(bought_category_set), 3)
     behavior_3_bought_catg_avrg = round(behavior_3_bought_catg_sum / len(bought_category_set), 3)
     
@@ -221,7 +223,7 @@ def cycle_unbought_item(usr_data, unbought_item_set):
 
     
 
-# the following code finds each user's average times of different behaviors on bought items 
+## MAIN BODY 
 #
 #
 import pandas as pd
