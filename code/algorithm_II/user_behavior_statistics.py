@@ -1,4 +1,7 @@
 # total times of different behaviors
+# 1 for browsing
+#
+
 def behaviors_total(usr_data):
     
     behavior_1_totl = len(usr_data[usr_data.behavior_type == 1])
@@ -100,7 +103,7 @@ def behavior_unbought_category_average(usr_data, unbought_category_set):
     
     for catg in unbought_category_set:
         catg_data = usr_data[usr_data.item_category == catg]
-        behavior_1_unbought__catg_sum = behavior_1_unbought_catg_sum + len(catg_data[catg_data.behavior_type == 1])
+        behavior_1_unbought_catg_sum = behavior_1_unbought_catg_sum + len(catg_data[catg_data.behavior_type == 1])
         behavior_2_unbought_catg_sum = behavior_2_unbought_catg_sum + len(catg_data[catg_data.behavior_type == 2])
         behavior_3_unbought_catg_sum = behavior_3_unbought_catg_sum + len(catg_data[catg_data.behavior_type == 3])
         
