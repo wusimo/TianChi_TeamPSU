@@ -236,12 +236,12 @@ from datetime import datetime
 
 # READ IN USER DATA
 # Customize your file path!!!
-user_file = 'F:/activities/TianChi_TeamPSU/data/algorithm_II/test_tianchi_mobile_recommend_train_user.csv'
+user_file = './test_tianchi_mobile_recommend_train_user.csv'
 user_data = pd.read_csv(user_file)
 
 # OUTPUT FILE
 #Customize your file path!!!
-stat_file = 'F:/activities/TianChi_TeamPSU/data/algorithm_II/test_user_behavior_statistics.csv'
+stat_file = './test_user_behavior_statistics.csv'
 file_user_stat = csv.writer(open(stat_file, 'wb'))
 file_user_stat.writerow(['user_id', 'behavior_1_total', 'behavior_2_total', 'behavior_3_total', 'behavior_4_total', \
                          'behavior_1_bought_itm_avrg', 'behavior_2_bought_itm_avrg', 'behavior_3_bought_itm_avrg', \
