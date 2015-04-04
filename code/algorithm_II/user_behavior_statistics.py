@@ -251,19 +251,12 @@ for usr in user_set:
     unbought_category_set = category_set.difference(bought_category_set)
     
     [behavior_1_totl, behavior_2_totl, behavior_3_totl, behavior_4_totl] = behaviors_total(usr_data)    
-    
     [behavior_1_bought_itm_avrg, behavior_2_bought_itm_avrg, behavior_3_bought_itm_avrg] = behavior_bought_item_average(usr_data, bought_item_set)
-    
     [behavior_1_unbought_itm_avrg, behavior_2_unbought_itm_avrg, behavior_3_unbought_itm_avrg] = behavior_unbought_item_average(usr_data, unbought_item_set)
-    
     [behavior_1_bought_catg_avrg, behavior_2_bought_catg_avrg, behavior_3_bought_catg_avrg] = behavior_bought_category_average(usr_data, bought_category_set)
-    
     [behavior_1_unbought_catg_avrg, behavior_2_unbought_catg_avrg, behavior_3_unbought_catg_avrg] = behavior_unbought_category_average(usr_data, unbought_category_set)
-    
     [behavior_1_similar_avrg, behavior_2_similar_avrg, behavior_3_similar_avrg] = behavior_similar_item_average(usr_data, bought_item_set)
-    
     cycle_bought_itm_avrg = cycle_bought_item(usr_data, bought_item_set)
-    
     cycle_unbought_itm_avrg = cycle_unbought_item(usr_data, unbought_item_set)
     
     file_user_stat.writerow([usr] + [behavior_1_totl, behavior_2_totl, behavior_3_totl, behavior_4_totl] + \
