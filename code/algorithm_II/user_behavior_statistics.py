@@ -162,9 +162,9 @@ def behavior_similar_item_average(usr_data, bought_item_set):
         
         for within_itm in similar_itm_set:
             within_itm_data = catg_data[catg_data.item_id == within_itm]
-            behavior_1_similar_within_sum = behavior_1_similar_within_sum + len(within_itm_data.behavior_type == 1)
-            behavior_2_similar_within_sum = behavior_2_similar_within_sum + len(within_itm_data.behavior_type == 2)
-            behavior_3_similar_within_sum = behavior_3_similar_within_sum + len(within_itm_data.behavior_type == 3)
+            behavior_1_similar_within_sum = behavior_1_similar_within_sum + len(within_itm_data[within_itm_data.behavior_type == 1])
+            behavior_2_similar_within_sum = behavior_2_similar_within_sum + len(within_itm_data[within_itm_data.behavior_type == 2])
+            behavior_3_similar_within_sum = behavior_3_similar_within_sum + len(within_itm_data[within_itm_data.behavior_type == 3])
 
         # behavior_m_similar_within_sum / len(similar_itm_set) is bh_m_i, m = 1, 2, 3
         behavior_1_similar_sum = behavior_1_similar_sum + behavior_1_similar_within_sum / len(similar_itm_set)
