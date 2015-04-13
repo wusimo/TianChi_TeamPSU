@@ -1,0 +1,100 @@
+import pandas as pd
+#import numpy as np
+#import json
+#import csv
+#from collections import defaultdict
+#import random
+import pickle
+from sklearn import svm
+from sklearn.externals import joblib
+
+# read in data
+
+
+
+data = pd.read_csv("/tianchi_mobile_recommend_train_user.csv")
+user_behavior_statistics = pd.read_csv("/user_behavior_statistics.csv")
+def characterizing(data,user_behavior_statistics,user_id,item_id,predicting_date=0,alpha=6,beta=0.5):
+    alpha=6
+    beta=0.5
+    user_behavior_table = user_behavior_statistics[user_behavior_statistics.user_id==user_id]
+    user_click_list = []
+    user_add_list = []
+    user_table = data[data.user_id==user_id]
+    user_item_table = user_table[user_table.item_id==item_id]
+    user_item_table = user_item_table.sort('time')
+    if not predicting_date:
+        buy_time = min(user_item_table[user_item_table.behavior_type==4].time)
+        predicting_date = int(buy_time.replace("-","").replace(" ",""))
+    user_item_table = user_item_table[user_item_table.time<=buy_time]
+    click_times = len(user_item_table[user_item_table.behavior_type==1])
+    click_table = user_item_table[user_item_table.behavior_type==1]
+    for i in range(0,len(click_table)):
+        a = ((predicting_date+1-int(click_table.time.values[i].replace("-","").replace(" ",""))))
+        user_click_list.append(a)  
+    
+    add_times = len(user_item_table[user_item_table.behavior_type==2])
+    add_table = user_item_table[user_item_table.behavior_type==2]
+    for i in range(0,len(add_table)):
+        a = ((predicting_date+1-int(add_table.time.values[i].replace("-","").replace(" ",""))))
+        user_add_list.append(a)
+    if len(user_click_list)&int(user_behavior_table.cycle_bought_itm_avrg.values[0]):
+        click_centroid = float(sum(user_click_list))/len(user_click_list)
+        click_centroid = float(click_centroid)/(float(user_behavior_table.cycle_bought_itm_avrg.values[0])*100)
+        if len(user_add_list)&int(user_behavior_table.behavior_2_bought_itm_avrg.values[0]):
+            add_centroid = float(sum(user_add_list))/len(user_add_list)
+            click_times = float(click_times)/float((user_behavior_table.behavior_2_bought_itm_avrg.values[0])*100)
+        else:
+            add_times = 0.0
+            add_centroid = 0.0
+            
+        return(click_times,click_centroid,add_times,add_centroid)
+    else:
+        return(0.0,0.0,0.0,0.0)
+
+#data2 = data[data.behavior_type==4]
+bought_list = []
+unbought_list = []
+user_set = set(data.user_id.values)
+selected_user_set = random.sample(user_set, 1000)
+selected_data = data[data['user_id'].isin(selected_user_set)]
+#selected_data.to_csv('thousand_selected_data', sep='\t', encoding='utf-8')
+
+data_test = selected_data
+
+user_set = set(data_test.user_id.values)
+for user in user_set:
+    user_table = data[data.user_id==int(user)]
+    user_bought_table = user_table[user_table.behavior_type==4]
+    category_set = set(user_bought_table.item_category.values)
+    for category in category_set:
+        user_category_table = user_table[user_table.item_category==category]
+        all_item = set(user_category_table.item_id.values)
+        temporary1 = user_category_table[user_category_table.behavior_type==4]
+        user_bought_item = set(temporary1.item_id.values)
+        bought_date = temporary1.time.values[0].replace("-","").replace(" ","")
+        for item in user_bought_item:
+            a = characterizing(data,user_behavior_statistics,int(user),int(item))
+            if int(a[0]):
+                bought_list.append(a)
+        for item in all_item.difference(user_bought_item):
+            a = characterizing(data,user_behavior_statistics,int(user),int(item),predicting_date=int(bought_date))
+            if int(a[0]):
+                unbought_list.append(a)
+
+bought_list.extend(unbought_list)
+fitting_list = bought_list
+label_list = [1 for ii in range(0,len(bought_list)-len(unbought_list))]            
+label_list.extend([0 for ii in range(0,len(unbought_list))])
+if fitting_list:
+    clf = svm.SVC()
+    clf.fit(fitting_list,label_list)
+    s = pickle.dumps(clf)
+    joblib.dump(clf, 'SVM.pkl') 
+    #clf2 = pickle.loads(s)
+    #clf2.predict(X[0])
+
+        
+
+
+#clf = joblib.load('SVM.pkl') 
