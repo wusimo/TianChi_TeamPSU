@@ -1,0 +1,24 @@
+import pandas as pd
+import numpy as np
+import csv
+from datetime import datetime
+from datetime import timedelta
+
+# read in train data
+train_data = pd.read_csv('F:/activities/TianChi/data/tianchi_mobile_recommend_train_user.csv')
+
+# prediction item list
+pred_item_lst = csv.writer(open('F:/activities/TianChi/data/pred_item_list.csv', 'wb'))
+pred_item_lst.writerow(['item_id', 'item_category'])
+
+for i in range(0, len(train_data)):
+    train_data.time.values[i] = train_data.time.values[i][0:10]
+    
+ref_data = train_data[train_data.time == '2014-12-18']
+ref_bgt_data = ref_data[ref_data.behavior_type == 4]
+pred_item_set = set(ref_bgt_data.item_id)
+
+for itm in pred_item_set:
+    itm_bgt_data = ref_bgt_data[ref_bgt_data.item_id == itm]
+    catg = itm_bgt_data.item_category.values[0]
+    pred_item_lst.writerow([itm, catg])

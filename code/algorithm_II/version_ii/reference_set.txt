@@ -1,0 +1,29 @@
+import pandas as pd
+import numpy as np
+import csv
+from datetime import datetime
+
+orgn_data = pd.read_csv('F:/activities/TianChi/data/tianchi_mobile_recommend_train_user.csv')
+
+ref_data = csv.writer(open('F:/activities/TianChi/data/ref_set.csv', 'wb'))
+ref_data.writerow(['user_id', 'item_id'])
+
+ref_lft = (time.strptime('2014-12-17 23', '%Y-%m-%d %H')).tm_yday * 24
+
+user_set = set(orgn_data.user_id)
+
+
+for usr in user_set:
+    usr_data = orgn_data[orgn_data.user_id == usr]
+    usr_bgt_data = usr_data[usr_data.behavior_type == 4]
+    for i in range(0, len(usr_bgt_data)):
+        usr_bgt_data.time.values[i] = usr_bgt_data.time.values[i][0:10]
+        
+    usr_bgt_ref_data = usr_bgt_data[usr_bgt_data.time == '2014-12-18']
+    item_set = set(usr_bgt_ref_data.item_id)
+    
+    if len(item_set) == 0:
+        continue
+        
+    for itm in item_set:
+        ref_data.writerow([usr, itm])

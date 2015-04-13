@@ -1,0 +1,11 @@
+import pandas as pd
+import numpy as np
+import csv
+import random
+
+# read in data
+data = pd.read_csv("F:/activities/TianChi/data/cleaned_tianchi_mobile_recommend_train_user.csv")
+user_set = set(data.user_id.values)
+selected_user_set = random.sample(user_set, 100)
+selected_data = data[data['user_id'].isin(selected_user_set)]
+selected_data.to_csv('F:/activities/TianChi/data/test_tianchi_mobile_recommend_train_user.csv', sep=',', encoding='utf-8')
